@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -39,7 +42,6 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
     private ArrayList<MeasurementData> listMeasurementData;
     private ArrayList<Entry> entries;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,45 +67,15 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
 
         //Références au graphique
         LineChart chart = findViewById(R.id.chart);
-        //Options du graphique
-        chart.setTouchEnabled(true);
-        chart.setDragEnabled(true);
-        chart.setScaleEnabled(true);
-        chart.setPinchZoom(true);
-        chart.setDoubleTapToZoomEnabled(false);
-        chart.setDrawBorders(true);
+        displayChart(chart);
 
-        //Options axes
-        YAxis rightAxis = chart.getAxisRight(); //Axe Y côté droit
-        rightAxis.setEnabled(false);
 
-        //Axe des ordonnées
-        YAxis leftAxis = chart.getAxisLeft(); //Axe Y côté gauche
-        leftAxis.setGranularity(1);
-        leftAxis.setGranularityEnabled(true);
-        leftAxis.setTextColor(Color.BLACK);
-        leftAxis.setTextSize(15f);
-
-        //Axe des abscisses
-        XAxis xAxis = chart.getXAxis(); //Axe X
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setGranularity(1);
-        xAxis.setGranularityEnabled(true);
-        xAxis.setTextColor(Color.BLACK);
-        xAxis.setTextSize(15f);
-        xAxis.setValueFormatter(new DayAxisValueFormatter(chart));
-
-        //Options legende
-        Legend legend = chart.getLegend();
-        legend.setEnabled(false);
-
-        //Options description
-        Description desc = chart.getDescription();
-        desc.setEnabled(false);
 
         //Récupération des données dans la BD
         DatabaseHelper dbHelper = new DatabaseHelper(this);
         listMeasurementData = dbHelper.fetchAllOfOneTypeFromMeasurements("Poids");
+
+        displayListView();
 
         //Gestion des données
         entries = new ArrayList<>();
@@ -201,6 +173,7 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
                 entries.add(new Entry(secondsToDays(currentDate), value));
                 updateChart(entries, chart);
 
+
                 Toast.makeText(MyWeightActivity.this, "Poids ajouté", Toast.LENGTH_SHORT).show();
             }
         });
@@ -233,5 +206,65 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
         lineData.setValueTextColor(Color.BLACK);
         _chart.setData(lineData);
         _chart.invalidate(); // refresh
+    }
+
+    private void displayChart(LineChart _chart)
+    {
+        //Options du graphique
+        _chart.setTouchEnabled(true);
+        _chart.setDragEnabled(true);
+        _chart.setScaleEnabled(true);
+        _chart.setPinchZoom(true);
+        _chart.setDoubleTapToZoomEnabled(false);
+        _chart.setDrawBorders(true);
+
+        //Options axes
+        YAxis rightAxis = _chart.getAxisRight(); //Axe Y côté droit
+        rightAxis.setEnabled(false);
+
+        //Axe des ordonnées
+        YAxis leftAxis = _chart.getAxisLeft(); //Axe Y côté gauche
+        leftAxis.setGranularity(1);
+        leftAxis.setGranularityEnabled(true);
+        leftAxis.setTextColor(Color.BLACK);
+        leftAxis.setTextSize(15f);
+
+        //Axe des abscisses
+        XAxis xAxis = _chart.getXAxis(); //Axe X
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setGranularity(1);
+        xAxis.setGranularityEnabled(true);
+        xAxis.setTextColor(Color.BLACK);
+        xAxis.setTextSize(15f);
+        xAxis.setValueFormatter(new DayAxisValueFormatter(_chart));
+
+        //Options legende
+        Legend legend = _chart.getLegend();
+        legend.setEnabled(false);
+
+        //Options description
+        Description desc = _chart.getDescription();
+        desc.setEnabled(false);
+    }
+
+    private void displayListView() {
+        RecyclerView recyclerView;
+        RecyclerView.Adapter mAdapter;
+        RecyclerView.LayoutManager layoutManager;
+
+        //Partie RecyclerView
+        recyclerView = findViewById(R.id.RV_measurements);
+
+        //Ajout de la ligne de division
+        DividerItemDecoration itemDecor = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        recyclerView.addItemDecoration(itemDecor);
+
+        //Instanciation de LinearLayoutManager
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+        //Instanciation de l'adapter
+        mAdapter = new RVAdapaterMeasurements(this, listMeasurementData);
+        recyclerView.setAdapter(mAdapter);
     }
 }
