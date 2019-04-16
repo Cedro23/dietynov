@@ -8,11 +8,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 public class RVAdapaterMeasurements extends RecyclerView.Adapter<RVAdapaterMeasurements.RVViewHolderMeasurements> {
 
@@ -58,11 +57,10 @@ public class RVAdapaterMeasurements extends RecyclerView.Adapter<RVAdapaterMeasu
         // - replace the contents of the view with that element
 
         final MeasurementData mData = listMeasurementData.get(position);
-        Date date = new Date(mData.getDate()*86400000);
-        SimpleDateFormat sdf = new SimpleDateFormat("d MMMM yyyy", Locale.FRANCE);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        String formattedDate = sdf.format(date);
-        holder.tv_date.setText(formattedDate);
+        long yourSeconds = mData.getDate() + 1546300800;
+        Date d = new Date(yourSeconds * 1000);
+        DateFormat df = new SimpleDateFormat("dd MMM yyyy");
+        holder.tv_date.setText(df.format(d));
         holder.tv_measurement.setText(Float.toString(mData.getValue()) + " kg");
     }
 
