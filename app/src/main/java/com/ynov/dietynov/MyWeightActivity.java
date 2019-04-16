@@ -172,6 +172,7 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
                 LineChart chart = findViewById(R.id.chart);
                 entries.add(new Entry(secondsToDays(currentDate), value));
                 updateChart(entries, chart);
+                displayListView();
 
 
                 Toast.makeText(MyWeightActivity.this, "Poids ajouté", Toast.LENGTH_SHORT).show();

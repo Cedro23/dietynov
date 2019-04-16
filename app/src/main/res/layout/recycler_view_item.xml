@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:id="@+id/LO-recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="23dp"
+        android:layout_height="36dp"
         android:orientation="horizontal"
         android:paddingStart="10dp"
-        android:paddingEnd="10dp">
+        android:paddingTop="6dp"
+        android:paddingEnd="10dp"
+        tools:layout_editor_absoluteX="15dp">
 
         <TextView
             android:id="@+id/TV-date"
-            android:layout_width="94dp"
+            android:layout_width="224dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="24 Jan 2019"
@@ -25,10 +30,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:paddingStart="10dp"
             android:text="70 kg"
             android:textColor="@android:color/black"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

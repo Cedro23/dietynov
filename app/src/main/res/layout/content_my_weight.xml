@@ -19,9 +19,15 @@
         <LinearLayout
             android:id="@+id/LO-chart"
             android:layout_width="match_parent"
-            android:layout_height="330dp"
+            android:layout_height="316dp"
             android:layout_marginTop="25dp"
             android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/TV-chart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Graphique" />
 
             <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/chart"
@@ -32,15 +38,22 @@
         <LinearLayout
             android:id="@+id/LO-recyclerview"
             android:layout_width="match_parent"
-            android:layout_height="306dp"
+            android:layout_height="232dp"
             android:layout_marginTop="20dp"
             android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/TV-measurementsvalues"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Valeurs" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/RV-measurements"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scrollbars="vertical" />
+                android:scrollbars="vertical"
+                tools:listitem="@layout/recycler_view_item" />
 
         </LinearLayout>
 

@@ -63,7 +63,7 @@ public class RVAdapaterMeasurements extends RecyclerView.Adapter<RVAdapaterMeasu
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         String formattedDate = sdf.format(date);
         holder.tv_date.setText(formattedDate);
-        holder.tv_measurement.setText(Float.toString(mData.getValue()));
+        holder.tv_measurement.setText(Float.toString(mData.getValue()) + " kg");
     }
 
     // Return the size of your dataset (invoked by the layout manager)
