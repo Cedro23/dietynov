@@ -1,9 +1,14 @@
 package com.ynov.dietynov;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,6 +18,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -25,32 +32,35 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 public class MyWeightActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private ArrayList<MeasurementData> listMeasurementData;
+    private ArrayList<Entry> entries;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_weight);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                addNewWeightData();
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         //Références au graphique
@@ -67,15 +77,20 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
         YAxis rightAxis = chart.getAxisRight(); //Axe Y côté droit
         rightAxis.setEnabled(false);
 
+        //Axe des ordonnées
         YAxis leftAxis = chart.getAxisLeft(); //Axe Y côté gauche
-        leftAxis.setAxisMinimum(35);
         leftAxis.setGranularity(1);
         leftAxis.setGranularityEnabled(true);
+        leftAxis.setTextColor(Color.BLACK);
+        leftAxis.setTextSize(15f);
 
+        //Axe des abscisses
         XAxis xAxis = chart.getXAxis(); //Axe X
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setGranularity(1);
         xAxis.setGranularityEnabled(true);
+        xAxis.setTextColor(Color.BLACK);
+        xAxis.setTextSize(15f);
         xAxis.setValueFormatter(new DayAxisValueFormatter(chart));
 
         //Options legende
@@ -86,17 +101,19 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
         Description desc = chart.getDescription();
         desc.setEnabled(false);
 
-        //Gestion des données
-        ArrayList<Entry> entries = new ArrayList<Entry>();
-        entries.add(new Entry(200,36));
-        entries.add(new Entry(400,39));
-        entries.add(new Entry(750,48));
-        entries.add(new Entry(1333,37));
+        //Récupération des données dans la BD
+        DatabaseHelper dbHelper = new DatabaseHelper(this);
+        listMeasurementData = dbHelper.fetchAllOfOneTypeFromMeasurements("Poids");
 
-        LineDataSet dataSet = new LineDataSet(entries, "Poids en fonction de la date");
-        LineData lineData = new LineData(dataSet);
-        chart.setData(lineData);
-        chart.invalidate(); // refresh
+        //Gestion des données
+        entries = new ArrayList<>();
+        for ( MeasurementData mData : listMeasurementData) {
+            int dateInDays = secondsToDays(mData.getDate());
+            int value = Math.round(mData.getValue());
+            entries.add( new Entry(dateInDays,value));
+        }
+        updateChart(entries, chart);
+
     }
 
     @Override
@@ -112,7 +129,7 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.myweight, menu);
         return true;
     }
 
@@ -123,10 +140,18 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_reset) {
+            DatabaseHelper dbHelper = new DatabaseHelper(this);
+            dbHelper.deleteDataFromOneInMeasurements("Poids");
+
+            LineChart chart = findViewById(R.id.chart);
+            entries.clear();
+            updateChart(entries, chart);
+
+            Toast.makeText(this, "Données de poids supprimées", Toast.LENGTH_SHORT).show();
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -155,5 +180,58 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
 
         startActivity(intent);
         return true;
+    }
+
+    private void addNewWeightData()
+    {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Insérer poids");
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        input.setRawInputType(Configuration.KEYBOARD_12KEY);
+        alert.setView(input);
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                int currentDate = (int) (System.currentTimeMillis() / 1000) - 1546300800;
+                DatabaseHelper dbHelper = new DatabaseHelper(MyWeightActivity.this);
+                float value = Integer.valueOf(input.getText().toString());
+                dbHelper.insertDataInMeasurements("Poids", currentDate, value);
+
+                LineChart chart = findViewById(R.id.chart);
+                entries.add(new Entry(secondsToDays(currentDate), value));
+                updateChart(entries, chart);
+
+                Toast.makeText(MyWeightActivity.this, "Poids ajouté", Toast.LENGTH_SHORT).show();
+            }
+        });
+        alert.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                //Put actions for CANCEL button here, or leave in blank
+            }
+        });
+        alert.show();
+    }
+
+    private int secondsToDays(int _seconds)
+    {
+        int days = 0;
+        double dateInHours = _seconds / 3600;
+        days = (int) Math.ceil(dateInHours/24);
+        return days;
+    }
+
+    private void updateChart(ArrayList<Entry> _entries, LineChart _chart)
+    {
+        LineDataSet dataSet;
+        LineData lineData;
+        dataSet = new LineDataSet(_entries, "Poids en fonction de la date");
+        dataSet.setCircleRadius(10f);
+        dataSet.setCircleHoleRadius(4.5f);
+        dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+        lineData = new LineData(dataSet);
+        lineData.setValueTextSize(15f);
+        lineData.setValueTextColor(Color.BLACK);
+        _chart.setData(lineData);
+        _chart.invalidate(); // refresh
     }
 }
