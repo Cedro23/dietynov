@@ -41,6 +41,7 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
 
     private ArrayList<MeasurementData> listMeasurementData;
     private ArrayList<Entry> entries;
+    private RecyclerView.Adapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +76,8 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
         DatabaseHelper dbHelper = new DatabaseHelper(this);
         listMeasurementData = dbHelper.fetchAllOfOneTypeFromMeasurements("Poids");
 
-        displayListView();
+        mAdapter = new RVAdapaterMeasurements(this, listMeasurementData);
+        displayRecyclerView();
 
         //Gestion des données
         entries = new ArrayList<>();
@@ -120,6 +122,8 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
             LineChart chart = findViewById(R.id.chart);
             entries.clear();
             updateChart(entries, chart);
+            listMeasurementData.clear();
+            updateRecyclerView();
 
             Toast.makeText(this, "Données de poids supprimées", Toast.LENGTH_SHORT).show();
             return true;
@@ -168,12 +172,13 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
                 DatabaseHelper dbHelper = new DatabaseHelper(MyWeightActivity.this);
                 float value = Integer.valueOf(input.getText().toString());
                 dbHelper.insertDataInMeasurements("Poids", currentDate, value);
-
                 LineChart chart = findViewById(R.id.chart);
+                listMeasurementData.add(new MeasurementData(currentDate, value));
                 entries.add(new Entry(secondsToDays(currentDate), value));
-                updateChart(entries, chart);
-                displayListView();
 
+                updateChart(entries, chart);
+                displayRecyclerView();
+                updateRecyclerView();
 
                 Toast.makeText(MyWeightActivity.this, "Poids ajouté", Toast.LENGTH_SHORT).show();
             }
@@ -248,9 +253,8 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
         desc.setEnabled(false);
     }
 
-    private void displayListView() {
+    private void displayRecyclerView() {
         RecyclerView recyclerView;
-        RecyclerView.Adapter mAdapter;
         RecyclerView.LayoutManager layoutManager;
 
         //Partie RecyclerView
@@ -265,7 +269,11 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
         recyclerView.setLayoutManager(layoutManager);
 
         //Instanciation de l'adapter
-        mAdapter = new RVAdapaterMeasurements(this, listMeasurementData);
         recyclerView.setAdapter(mAdapter);
+    }
+
+    private void updateRecyclerView()
+    {
+        mAdapter.notifyDataSetChanged();
     }
 }
