@@ -2,11 +2,11 @@ package com.ynov.dietynov;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,9 +25,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -35,7 +35,6 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class MyWeightActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -68,9 +67,8 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
 
         //Références au graphique
         LineChart chart = findViewById(R.id.chart);
+        //Affichage du graphique + options
         displayChart(chart);
-
-
 
         //Récupération des données dans la BD
         DatabaseHelper dbHelper = new DatabaseHelper(this);
@@ -151,7 +149,7 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
             intent = new Intent(this, MyRecipesActivity.class);
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
         startActivity(intent);
@@ -168,8 +166,8 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
         alert.setView(input);
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                int currentDate = (int) (System.currentTimeMillis() / 1000) - 1546300800;
                 DatabaseHelper dbHelper = new DatabaseHelper(MyWeightActivity.this);
+                int currentDate = (int) (System.currentTimeMillis() / 1000) - 1546300800;
                 float value = Integer.valueOf(input.getText().toString());
                 dbHelper.insertDataInMeasurements("Poids", currentDate, value);
                 LineChart chart = findViewById(R.id.chart);
@@ -177,7 +175,6 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
                 entries.add(new Entry(secondsToDays(currentDate), value));
 
                 updateChart(entries, chart);
-                displayRecyclerView();
                 updateRecyclerView();
 
                 Toast.makeText(MyWeightActivity.this, "Poids ajouté", Toast.LENGTH_SHORT).show();
@@ -251,6 +248,44 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
         //Options description
         Description desc = _chart.getDescription();
         desc.setEnabled(false);
+
+        //Création et affichage de limites
+        drawLimits(_chart);
+    }
+
+    private void drawLimits(LineChart _chart){
+        SharedPreferences accountPreferences = getSharedPreferences("accountPrefs", MODE_PRIVATE);
+        String userHeight = accountPreferences.getString("height", "");
+        if  ( userHeight != "")
+        {
+            float userHeightFloat = Float.parseFloat(userHeight)/100;
+            YAxis leftAxis = _chart.getAxisLeft(); //Axe Y côté gauche
+            LimitLine imc185 = createLimitLine(18.5f, userHeightFloat, Color.rgb(0,255,0));
+            LimitLine imc25 = createLimitLine(25f, userHeightFloat, Color.rgb(255, 255, 0));
+            LimitLine imc30 = createLimitLine(30f, userHeightFloat, Color.rgb(255, 153, 51));
+            LimitLine imc35 = createLimitLine(35f, userHeightFloat,Color.rgb(255,0,0));
+
+            leftAxis.addLimitLine(imc185);
+            leftAxis.addLimitLine(imc25);
+            leftAxis.addLimitLine(imc30);
+            leftAxis.addLimitLine(imc35);
+        }
+        else
+        {
+            //Dire à l'utilisateur d'aller saisir sa taille
+        }
+
+    }
+
+    private LimitLine createLimitLine(float _imcValue, float _height, int _color){
+        LimitLine mLimitLine = new LimitLine(_imcValue * (float) Math.pow(_height,2),"IMC " + Float.toString(_imcValue));
+
+        mLimitLine.setLineColor(_color);
+        mLimitLine.setLineWidth(2f);
+        mLimitLine.setTextColor(Color.BLACK);
+        mLimitLine.setTextSize(12f);
+
+        return mLimitLine;
     }
 
     private void displayRecyclerView() {

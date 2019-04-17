@@ -40,7 +40,6 @@ public class MyAccountActivity extends AppCompatActivity
 
     private SharedPreferences accountPreferences;
     private android.content.SharedPreferences.Editor accountPrefsEditor;
-    private Boolean saveAccount;
 
     private EditText et_Date;
     private EditText et_Height;
@@ -135,7 +134,6 @@ public class MyAccountActivity extends AppCompatActivity
         //Gestion des shared preferences pour les données de l'utilisateur
         accountPreferences = getSharedPreferences("accountPrefs", MODE_PRIVATE);
         accountPrefsEditor = accountPreferences.edit();
-        saveAccount = accountPreferences.getBoolean("saveAccount", false);
 
         //Si il y a des valeurs dans les shared préférences elles seront affichées dans les edit text
         et_Date.setText(accountPreferences.getString("date", ""));
