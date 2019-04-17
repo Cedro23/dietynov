@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             } else if (id == R.id.nav_recipes) {
                 // Handle the recipes action
                 intent = new Intent(this, MyRecipesActivity.class);
+                intent.putExtra("fatchType", "database");
             }
             startActivity(intent);
         }
@@ -105,6 +106,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void displayMyMeasurements(View _v)
     {
         Intent intent = new Intent(this, MyMeasurementsActivity.class);
+        startActivity(intent);
+    }
+
+    public void displayMyRecipes(View _v)
+    {
+        Intent intent = new Intent(this, MyRecipesActivity.class);
+        intent.putExtra("fetchType", "webservice");
         startActivity(intent);
     }
 }

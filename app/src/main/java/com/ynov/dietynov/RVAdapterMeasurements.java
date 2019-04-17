@@ -13,7 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class RVAdapaterMeasurements extends RecyclerView.Adapter<RVAdapaterMeasurements.RVViewHolderMeasurements> {
+public class RVAdapterMeasurements extends RecyclerView.Adapter<RVAdapterMeasurements.RVViewHolderMeasurements> {
 
     private ArrayList<MeasurementData> listMeasurementData;
     private Context mContext;
@@ -36,7 +36,7 @@ public class RVAdapaterMeasurements extends RecyclerView.Adapter<RVAdapaterMeasu
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public RVAdapaterMeasurements(Context _context, ArrayList<MeasurementData> _myDataset, String _unit) {
+    public RVAdapterMeasurements(Context _context, ArrayList<MeasurementData> _myDataset, String _unit) {
         this.mContext = _context;
         listMeasurementData = _myDataset;
         this.unit = _unit;
@@ -44,7 +44,7 @@ public class RVAdapaterMeasurements extends RecyclerView.Adapter<RVAdapaterMeasu
 
     // Create new views (invoked by the layout manager)
     @Override
-    public RVAdapaterMeasurements.RVViewHolderMeasurements onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RVAdapterMeasurements.RVViewHolderMeasurements onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_item, parent, false);
 

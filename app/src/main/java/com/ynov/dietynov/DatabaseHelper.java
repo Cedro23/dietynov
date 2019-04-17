@@ -15,8 +15,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "android_dietynov.db";
 
     private static final String MEASUREMENTS_TABLE = "measurements_table";
+    private static final String RECIPES_TABLE = "recipes_table";
 
+    //Champs tables measurements_table et recipes_table
     private static final String _ID = "id";
+
+    //Champs measurements_table
     private static final String _TYPE = "type";
     private static final String _DATE = "date";
     private static final String _VALUE = "value";
@@ -28,15 +32,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     private static final String CREATE_TABLE_MEASUREMENTS_TBL = "CREATE TABLE " + MEASUREMENTS_TABLE + "(" + _ID + "  INTEGER PRIMARY KEY AUTOINCREMENT, " + _TYPE + " VARCHAR(10) NOT NULL ," + _DATE + " INTEGER(8) NOT NULL, " + _VALUE + " REAL NOT NULL)";
+    private static final String CREATE_TABLE_RECIPES_TBL = "";
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_MEASUREMENTS_TBL);
+        db.execSQL(CREATE_TABLE_RECIPES_TBL);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + MEASUREMENTS_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + RECIPES_TABLE);
 
         onCreate(db);
     }
@@ -82,4 +89,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.delete(MEASUREMENTS_TABLE, "type = ?", new String[] {_type});
         db.close();
     }
+
+
+
+
+
+    //Fetch all recipes from Recipe table
+    public ArrayList<Recipe> fetchAllFromRecipe()
+    {
+        ArrayList<Recipe> listRecipes = new ArrayList<>();
+
+        return listRecipes;
+    }
+
+    //Fetch one from recipe
+//    public Recipe fetchOneFromRecipe()
+//    {
+//        Recipe recipe = new Recipe();
+//
+//        return recipe;
+//    }
 }

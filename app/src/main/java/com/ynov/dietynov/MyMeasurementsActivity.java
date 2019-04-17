@@ -158,7 +158,7 @@ public class MyMeasurementsActivity extends AppCompatActivity implements Navigat
         selectedMeasurement = measurements[position];
         fetchingDataFromDB();
         updateEntries();
-        mAdapter = new RVAdapaterMeasurements(this, listMeasurementData, "cm");
+        mAdapter = new RVAdapterMeasurements(this, listMeasurementData, "cm");
         displayRecyclerView();
     }
     @Override

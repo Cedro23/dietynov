@@ -74,7 +74,8 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
         DatabaseHelper dbHelper = new DatabaseHelper(this);
         listMeasurementData = dbHelper.fetchAllOfOneTypeFromMeasurements("Poids");
 
-        mAdapter = new RVAdapaterMeasurements(this, listMeasurementData, "kg");
+        //Mise en place de l'adapter
+        mAdapter = new RVAdapterMeasurements(this, listMeasurementData, "kg");
         displayRecyclerView();
 
         //Gestion des données
@@ -256,7 +257,7 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
     private void drawLimits(LineChart _chart){
         SharedPreferences accountPreferences = getSharedPreferences("accountPrefs", MODE_PRIVATE);
         String userHeight = accountPreferences.getString("height", "");
-        if  ( userHeight != "")
+        if ( userHeight != "")
         {
             float userHeightFloat = Float.parseFloat(userHeight)/100;
             YAxis leftAxis = _chart.getAxisLeft(); //Axe Y côté gauche
@@ -264,6 +265,7 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
             LimitLine imc25 = createLimitLine(25f, userHeightFloat, Color.rgb(255, 255, 0));
             LimitLine imc30 = createLimitLine(30f, userHeightFloat, Color.rgb(255, 153, 51));
             LimitLine imc35 = createLimitLine(35f, userHeightFloat,Color.rgb(255,0,0));
+
 
             leftAxis.addLimitLine(imc185);
             leftAxis.addLimitLine(imc25);
@@ -275,6 +277,22 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
             //Dire à l'utilisateur d'aller saisir sa taille
         }
 
+        String userWeight = accountPreferences.getString("weight", "");
+        if (userWeight != "")
+        {
+            float userWeightFloat = Float.parseFloat(userWeight);
+            YAxis leftAxis = _chart.getAxisLeft(); //Axe Y côté gauche
+            LimitLine startingWeightLimit = new LimitLine(userWeightFloat, "Poids de départ");
+            startingWeightLimit.setLineColor(Color.rgb(0, 255, 255));
+            startingWeightLimit.setLineWidth(2f);
+            startingWeightLimit.setTextColor(Color.BLACK);
+            startingWeightLimit.setTextSize(12f);
+            leftAxis.addLimitLine(startingWeightLimit);
+        }
+        else
+        {
+            //Dire à l'utilisateur d'aller saisir son poids de départ
+        }
     }
 
     private LimitLine createLimitLine(float _imcValue, float _height, int _color){

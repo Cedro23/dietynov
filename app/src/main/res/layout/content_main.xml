@@ -52,7 +52,8 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="40dp"
                 android:layout_marginBottom="40dp"
-                android:text="Recettes" />
+                android:text="Recettes"
+                android:onClick="displayMyRecipes"/>
         </LinearLayout>
     </ScrollView>
 
