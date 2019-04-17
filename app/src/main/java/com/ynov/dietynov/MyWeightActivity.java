@@ -74,7 +74,7 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
         DatabaseHelper dbHelper = new DatabaseHelper(this);
         listMeasurementData = dbHelper.fetchAllOfOneTypeFromMeasurements("Poids");
 
-        mAdapter = new RVAdapaterMeasurements(this, listMeasurementData);
+        mAdapter = new RVAdapaterMeasurements(this, listMeasurementData, "kg");
         displayRecyclerView();
 
         //Gestion des données
@@ -101,7 +101,7 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.myweight, menu);
+        getMenuInflater().inflate(R.menu.mymeasurements, menu);
         return true;
     }
 
@@ -227,7 +227,7 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
 
         //Axe des ordonnées
         YAxis leftAxis = _chart.getAxisLeft(); //Axe Y côté gauche
-        leftAxis.setGranularity(1);
+        leftAxis.setGranularity(0.1f);
         leftAxis.setGranularityEnabled(true);
         leftAxis.setTextColor(Color.BLACK);
         leftAxis.setTextSize(15f);
@@ -235,7 +235,7 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
         //Axe des abscisses
         XAxis xAxis = _chart.getXAxis(); //Axe X
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setGranularity(1);
+        xAxis.setGranularity(1f);
         xAxis.setGranularityEnabled(true);
         xAxis.setTextColor(Color.BLACK);
         xAxis.setTextSize(15f);

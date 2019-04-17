@@ -8,4 +8,73 @@
     tools:context=".MyMeasurementsActivity"
     tools:showIn="@layout/app_bar_my_measurements">
 
+    <LinearLayout
+        android:id="@+id/LO-uberlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingStart="25dp"
+        android:paddingEnd="25dp">
+
+        <LinearLayout
+            android:id="@+id/LO-spinner"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/TV-spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Type" />
+
+            <Spinner
+                android:id="@+id/SP-measurements"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LO-chart"
+            android:layout_width="match_parent"
+            android:layout_height="316dp"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/TV-chart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Graphique" />
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/chart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LO-recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="232dp"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/TV-measurementsvalues"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Valeurs" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/RV-measurements"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical"
+                tools:listitem="@layout/recycler_view_item" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>

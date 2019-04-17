@@ -17,6 +17,7 @@ public class RVAdapaterMeasurements extends RecyclerView.Adapter<RVAdapaterMeasu
 
     private ArrayList<MeasurementData> listMeasurementData;
     private Context mContext;
+    private String unit;
 
     public static class RVViewHolderMeasurements extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
@@ -35,9 +36,10 @@ public class RVAdapaterMeasurements extends RecyclerView.Adapter<RVAdapaterMeasu
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public RVAdapaterMeasurements(Context _context, ArrayList<MeasurementData> _myDataset) {
+    public RVAdapaterMeasurements(Context _context, ArrayList<MeasurementData> _myDataset, String _unit) {
         this.mContext = _context;
         listMeasurementData = _myDataset;
+        this.unit = _unit;
     }
 
     // Create new views (invoked by the layout manager)
@@ -61,7 +63,7 @@ public class RVAdapaterMeasurements extends RecyclerView.Adapter<RVAdapaterMeasu
         Date d = new Date(yourSeconds * 1000);
         DateFormat df = new SimpleDateFormat("dd MMM yyyy");
         holder.tv_date.setText(df.format(d));
-        holder.tv_measurement.setText(Float.toString(mData.getValue()) + " kg");
+        holder.tv_measurement.setText(Float.toString(mData.getValue()) + " " + unit);
     }
 
     // Return the size of your dataset (invoked by the layout manager)
