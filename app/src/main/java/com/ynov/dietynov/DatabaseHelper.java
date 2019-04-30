@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class DatabaseHelper extends SQLiteOpenHelper {
     private Context mContext;
 
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 8;
     private static final String DATABASE_NAME = "android_dietynov.db";
 
     private static final String MEASUREMENTS_TABLE = "measurements_table";
@@ -32,18 +32,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     private static final String CREATE_TABLE_MEASUREMENTS_TBL = "CREATE TABLE " + MEASUREMENTS_TABLE + "(" + _ID + "  INTEGER PRIMARY KEY AUTOINCREMENT, " + _TYPE + " VARCHAR(10) NOT NULL ," + _DATE + " INTEGER(8) NOT NULL, " + _VALUE + " REAL NOT NULL)";
-    private static final String CREATE_TABLE_RECIPES_TBL = "";
+    //A décomenter lors de la mise en place de la deuxième table
+//    private static final String CREATE_TABLE_RECIPES_TBL = "";
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_MEASUREMENTS_TBL);
-        db.execSQL(CREATE_TABLE_RECIPES_TBL);
+        //A décomenter lors de la mise en place de la deuxième table
+//        db.execSQL(CREATE_TABLE_RECIPES_TBL);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + MEASUREMENTS_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + RECIPES_TABLE);
+        //A décomenter lors de la mise en place de la deuxième table
+//        db.execSQL("DROP TABLE IF EXISTS " + RECIPES_TABLE);
 
         onCreate(db);
     }
