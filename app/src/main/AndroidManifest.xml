@@ -12,9 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".SingleRecipeDisplayActivity"
+            android:label="@string/RecipeDisplay"
+            android:parentActivityName=".MyRecipesActivity" />
+        <activity
             android:name=".MyMeasurementsActivity"
             android:label="@string/title_activity_my_measurements"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MyAccountActivity"
             android:label="@string/title_activity_my_account"

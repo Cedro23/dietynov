@@ -11,6 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 public class RVAdapterRecipes extends RecyclerView.Adapter<RVAdapterRecipes.RVViewHolderRecipes> {
@@ -52,24 +54,24 @@ public class RVAdapterRecipes extends RecyclerView.Adapter<RVAdapterRecipes.RVVi
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(RVAdapterRecipes.RVViewHolderRecipes holder, int position) {
+    public void onBindViewHolder(RVViewHolderRecipes holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
 
         final Recipe mRecipe = listRecipes.get(position);
+
         holder.tv_recipeName.setText(mRecipe.getName());
+        Picasso.get().load(mRecipe.getImageURL()).into(holder.iv_recipeImage);
 
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(mContext, "Nom : " + mRecipe.getName(), Toast.LENGTH_SHORT).show();
-
-                //Instanciation de l'intent
-//                Intent intentInfo = new Intent(mContext, FicheProspectActivity.class);
-//                intentInfo.putExtra("Prospect", prospect);
-                //Démarrage de l'activité de fiche d'info du prospect
-//                mContext.startActivity(intentInfo);
+//                Instanciation de l'intent
+                Intent intentInfo = new Intent(mContext, SingleRecipeDisplayActivity.class);
+                intentInfo.putExtra("Recipe", mRecipe);
+//                Démarrage de l'activité de fiche d'info du prospect
+                mContext.startActivity(intentInfo);
             }
         });
     }

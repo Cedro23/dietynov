@@ -36,9 +36,7 @@ import java.util.Collections;
 
 public class MyRecipesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private RecyclerView.Adapter mAdapter;
     private ArrayList<Recipe> listRecipes = new ArrayList<>();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,15 +44,6 @@ public class MyRecipesActivity extends AppCompatActivity implements NavigationVi
         setContentView(R.layout.activity_my_recipes);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -65,16 +54,22 @@ public class MyRecipesActivity extends AppCompatActivity implements NavigationVi
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-//        if (getIntent().getStringExtra("fetchType").equals("database")){
-//            //code when needing list from DB
-//            listRecipes = fetchListFromDB();
-//        }
-        if (getIntent().getStringExtra("fetchType").equals("webservice")){
-            //code when needing list from WebService
+        Bundle extras = getIntent().getExtras();
+
+        if (extras != null) {
+            if (extras.getString("fetchType").equals("database")){
+                //code when needing list from DB
+                listRecipes = fetchListFromDB();
+            }
+
+            if (extras.getString("fetchType").equals("webservice")){
+                //code when needing list from WebService
+                instantiateRequestQueue();
+            }
+        }
+        else {
             instantiateRequestQueue();
         }
-
-
 
     }
 
@@ -91,7 +86,7 @@ public class MyRecipesActivity extends AppCompatActivity implements NavigationVi
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.myrecipes, menu);
         return true;
     }
 
@@ -102,10 +97,9 @@ public class MyRecipesActivity extends AppCompatActivity implements NavigationVi
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
+        if (id == R.id.action_sort) {
+            Toast.makeText(this, "Liste triée", Toast.LENGTH_SHORT).show();
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -180,7 +174,30 @@ public class MyRecipesActivity extends AppCompatActivity implements NavigationVi
                     for (int i = 0; i < jsonArray.length(); i++)
                     {
                         JSONObject currentRecipe = jsonArray.getJSONObject(i);
-                        listRecipes.add(new Recipe(i, currentRecipe.getString("title")));
+                        JSONObject currentRecipeTime = currentRecipe.getJSONObject("time");
+                        JSONArray currentRecipeIngredients = currentRecipe.getJSONArray("ingredients");
+                        JSONArray currentRecipeSteps = currentRecipe.getJSONArray("steps");
+                        JSONObject currentRecipeNutrition = currentRecipe.getJSONObject("nutrition");
+
+                        ArrayList<Ingredient> ingredients = new ArrayList<>();
+
+                        for (int j=0; j<currentRecipeIngredients.length(); j++)
+                        {
+                            JSONObject ingredient = currentRecipeIngredients.getJSONObject(j);
+                            ingredients.add(new Ingredient(ingredient.getInt("quantity"),ingredient.getString("unit"),ingredient.getString("name")));
+                        }
+
+                        ArrayList<Step> steps = new ArrayList<>();
+
+                        for (int j=0; j<currentRecipeSteps.length(); j++)
+                        {
+                            JSONObject step = currentRecipeSteps.getJSONObject(j);
+                            steps.add(new Step(step.getInt("order"),step.getString("step")));
+                        }
+
+                        Nutrition nutrition = new Nutrition(currentRecipeNutrition.getDouble("kcal"), currentRecipeNutrition.getDouble("protein"), currentRecipeNutrition.getDouble("fat"), currentRecipeNutrition.getDouble("carbohydrate"), currentRecipeNutrition.getDouble("sugar"), currentRecipeNutrition.getDouble("sat_fat"), currentRecipeNutrition.getDouble("fiber"), currentRecipeNutrition.getDouble("sodium"));
+
+                        listRecipes.add(new Recipe(i, currentRecipe.getString("title"), currentRecipe.getString("picture_url"), currentRecipe.getInt("portions"), new Timing(currentRecipeTime.getInt("total"),currentRecipeTime.getInt("prep"),currentRecipeTime.getInt("baking")), ingredients, steps, nutrition));
                     }
                     displayRecyclerView();
                 }

@@ -102,14 +102,40 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     {
         ArrayList<Recipe> listRecipes = new ArrayList<>();
 
+
+
         return listRecipes;
     }
 
     //Fetch one from recipe
 //    public Recipe fetchOneFromRecipe()
 //    {
-//        Recipe recipe = new Recipe();
+//        Recipe recipe;
+//
+//
 //
 //        return recipe;
 //    }
+
+    //Vérifie combien de fois le prospect se trouve dans la BDD
+    public boolean getProspectIsFav(int _idRecipe)
+    {
+        String selectQuery = "SELECT  * FROM " + RECIPES_TABLE + " WHERE id_recipe = " + _idRecipe;
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(selectQuery,null,null);
+
+        //Si la recette n'est pas présente dans la BDD, alors on renvoie "false"
+        if (cursor.getCount() <= 0)
+        {
+            cursor.close();
+            return false;
+        }
+        //Si la recette est présente dans la BDD au moins une fois (max = 1), alors on revoie "true"
+        else
+        {
+            cursor.close();
+            return true;
+        }
+    }
 }

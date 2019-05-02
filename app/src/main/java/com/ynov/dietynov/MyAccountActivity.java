@@ -257,6 +257,7 @@ public class MyAccountActivity extends AppCompatActivity
             } else if (id == R.id.nav_recipes) {
                 // Handle the recipes action
                 intent = new Intent(this, MyRecipesActivity.class);
+                intent.putExtra("fetchType", "database");
             }
             startActivity(intent);
         }

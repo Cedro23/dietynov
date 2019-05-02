@@ -143,6 +143,7 @@ public class MyMeasurementsActivity extends AppCompatActivity implements Navigat
         } else if (id == R.id.nav_recipes) {
             // Handle the recipes action
             intent = new Intent(this, MyRecipesActivity.class);
+            intent.putExtra("fetchType", "database");
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

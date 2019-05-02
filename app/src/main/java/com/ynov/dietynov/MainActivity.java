@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             } else if (id == R.id.nav_recipes) {
                 // Handle the recipes action
                 intent = new Intent(this, MyRecipesActivity.class);
-                intent.putExtra("fatchType", "database");
+                intent.putExtra("fetchType", "database");
             }
             startActivity(intent);
         }

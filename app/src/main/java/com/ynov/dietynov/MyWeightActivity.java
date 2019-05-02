@@ -148,6 +148,7 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
         } else if (id == R.id.nav_recipes) {
             // Handle the recipes action
             intent = new Intent(this, MyRecipesActivity.class);
+            intent.putExtra("fetchType", "database");
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
