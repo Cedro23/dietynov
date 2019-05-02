@@ -162,14 +162,14 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Insérer poids");
         final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        input.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
         input.setRawInputType(Configuration.KEYBOARD_12KEY);
         alert.setView(input);
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 DatabaseHelper dbHelper = new DatabaseHelper(MyWeightActivity.this);
                 int currentDate = (int) (System.currentTimeMillis() / 1000) - 1546300800;
-                float value = Integer.valueOf(input.getText().toString());
+                float value = Float.valueOf(input.getText().toString());
                 dbHelper.insertDataInMeasurements("Poids", currentDate, value);
                 LineChart chart = findViewById(R.id.chart);
                 listMeasurementData.add(new MeasurementData(currentDate, value));
