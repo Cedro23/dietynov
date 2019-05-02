@@ -3,11 +3,11 @@ package com.ynov.dietynov;
 import java.io.Serializable;
 
 public class Ingredient implements Serializable {
-    private int quantity;
+    private double quantity;
     private String unit;
     private String name;
 
-    public Ingredient(int _quantity, String _unit, String _name)
+    public Ingredient(double _quantity, String _unit, String _name)
     {
         this.quantity = _quantity;
         this.unit = _unit;
@@ -18,7 +18,7 @@ public class Ingredient implements Serializable {
         return name;
     }
 
-    public int getQuantity() {
+    public double getQuantity() {
         return quantity;
     }
 
@@ -30,7 +30,7 @@ public class Ingredient implements Serializable {
         this.name = name;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(double quantity) {
         this.quantity = quantity;
     }
 

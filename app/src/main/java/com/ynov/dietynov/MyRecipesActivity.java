@@ -59,7 +59,7 @@ public class MyRecipesActivity extends AppCompatActivity implements NavigationVi
         if (extras != null) {
             if (extras.getString("fetchType").equals("database")){
                 //code when needing list from DB
-                listRecipes = fetchListFromDB();
+                fetchListFromDB();
             }
 
             if (extras.getString("fetchType").equals("webservice")){
@@ -131,12 +131,10 @@ public class MyRecipesActivity extends AppCompatActivity implements NavigationVi
     }
 
     //fetching recipe list from database
-    private ArrayList<Recipe> fetchListFromDB(){
-        ArrayList<Recipe> recipesList = new ArrayList<>();
+    private void fetchListFromDB(){
         DatabaseHelper dbHelper = new DatabaseHelper(this);
 
-//        recipesList = dbHelper.fetchAllFromRecipe();
-        return recipesList;
+        listRecipes = dbHelper.fetchAllFromRecipe();
     }
 
     private void displayRecyclerView() {
@@ -184,7 +182,7 @@ public class MyRecipesActivity extends AppCompatActivity implements NavigationVi
                         for (int j=0; j<currentRecipeIngredients.length(); j++)
                         {
                             JSONObject ingredient = currentRecipeIngredients.getJSONObject(j);
-                            ingredients.add(new Ingredient(ingredient.getInt("quantity"),ingredient.getString("unit"),ingredient.getString("name")));
+                            ingredients.add(new Ingredient(ingredient.getDouble("quantity"),ingredient.getString("unit"),ingredient.getString("name")));
                         }
 
                         ArrayList<Step> steps = new ArrayList<>();

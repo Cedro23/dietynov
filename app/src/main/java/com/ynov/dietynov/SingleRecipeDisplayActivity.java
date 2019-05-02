@@ -30,6 +30,8 @@ public class SingleRecipeDisplayActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         recipe = (Recipe) extras.getSerializable("Recipe");
 
+        isFav =checkIsFav();
+
         //référence aux views
         ImageView image = findViewById(R.id.IV_recipeImage);
         TextView name = findViewById(R.id.TV_nameRecipe);
@@ -122,6 +124,7 @@ public class SingleRecipeDisplayActivity extends AppCompatActivity {
 
 //        //noinspection SimplifiableIfStatement
         if (id == R.id.action_favorite) {
+            DatabaseHelper dbHelper = new DatabaseHelper(this);
 
             if (isFav)
             {
@@ -133,11 +136,21 @@ public class SingleRecipeDisplayActivity extends AppCompatActivity {
             {
                 item.setIcon(R.drawable.ic_favorite);
                 Toast.makeText(this, "Recettes ajoutée aux favoris", Toast.LENGTH_SHORT).show();
+                dbHelper.insertRecipe(recipe);
                 isFav = true;
             }
 
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean checkIsFav()
+    {
+        DatabaseHelper dbHelper = new DatabaseHelper(this);
+
+        boolean isFav = dbHelper.getRecipeIsFav(recipe.getId());
+
+        return isFav;
     }
 }
