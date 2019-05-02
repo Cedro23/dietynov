@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class DatabaseHelper extends SQLiteOpenHelper {
     private Context mContext;
 
-    private static final int DATABASE_VERSION = 13;
+    private static final int DATABASE_VERSION = 15;
     private static final String DATABASE_NAME = "android_dietynov.db";
 
     private static final String MEASUREMENTS_TABLE = "measurements_table";
@@ -181,12 +181,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    //delete recipe
+    public void deleteRecipe(int id_recette)
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.delete(RECIPES_TABLE, "id_recipe = " + id_recette, null);
+        db.delete(INGREDIENTS_TABLE, "id_recipe = " + id_recette, null);
+        db.delete(STEPS_TABLE, "id_recipe = " + id_recette, null);
+        db.close();
+    }
+
 
     //Fetch all recipes from Recipe table
     public ArrayList<Recipe> fetchAllFromRecipe()
     {
         ArrayList<Recipe> listRecipes = new ArrayList<>();
-        Recipe recipe = null;
         ArrayList<Ingredient> ingredients = new ArrayList<>();
         ArrayList<Step> steps = new ArrayList<>();
 
@@ -197,30 +206,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String selectQueryIngredient = "SELECT  * FROM " + INGREDIENTS_TABLE;
         Cursor c2 = db.rawQuery(selectQueryIngredient,null,null);
 
-        String selectQueryStep = "SELECT  * FROM " + INGREDIENTS_TABLE;
+        String selectQueryStep = "SELECT  * FROM " + STEPS_TABLE;
         Cursor c3 = db.rawQuery(selectQueryStep,null,null);
 
         if (c.moveToFirst()) {
-            Timing timing = new Timing(c.getInt(4), c.getInt(5),c.getInt(6));
+            Timing timing = new Timing(c.getInt(5), c.getInt(6),c.getInt(7));
 
             if (c2.moveToFirst())
             {
                 do {
-                    Ingredient ingredient = new Ingredient(c.getDouble(3),c.getString(4), c.getString(2));
+                    Ingredient ingredient = new Ingredient(c2.getDouble(3),c2.getString(4), c2.getString(2));
                     ingredients.add(ingredient);
-                } while(c.moveToNext());
+                } while(c2.moveToNext());
             }
 
             if (c3.moveToFirst())
             {
                 do {
-                    Step step = new Step(c.getInt(2), c.getString(3));
+                    Step step = new Step(c3.getInt(2), c3.getString(3));
                     steps.add(step);
-                } while(c.moveToNext());
+                } while(c3.moveToNext());
             }
 
-            Nutrition nutrition = new Nutrition(c.getDouble(7),c.getDouble(8),c.getDouble(9),c.getDouble(10),c.getDouble(11),c.getDouble(12),c.getDouble(13),c.getDouble(14));
-            recipe = new Recipe(c.getInt(0), c.getString(1),c.getString(2), c.getInt(3),timing, ingredients, steps, nutrition);
+            Nutrition nutrition = new Nutrition(c.getDouble(8),c.getDouble(9),c.getDouble(10),c.getDouble(11),c.getDouble(12),c.getDouble(13),c.getDouble(14),c.getDouble(15));
+            Recipe recipe = new Recipe(c.getInt(1), c.getString(2),c.getString(3), c.getInt(4),timing, ingredients, steps, nutrition);
             listRecipes.add(recipe);
         }
 
@@ -245,12 +254,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor c3 = db.rawQuery(selectQueryStep,null,null);
 
         if (c.moveToFirst()) {
-            Timing timing = new Timing(c.getInt(4), c.getInt(5),c.getInt(6));
+            Timing timing = new Timing(c.getInt(5), c.getInt(6),c.getInt(7));
 
             if (c2.moveToFirst())
             {
                 do {
-                    Ingredient ingredient = new Ingredient(c.getDouble(3),c.getString(4), c.getString(2));
+                    Ingredient ingredient = new Ingredient(c2.getDouble(3),c2.getString(4), c2.getString(2));
                     ingredients.add(ingredient);
                 } while(c.moveToNext());
             }
@@ -258,13 +267,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             if (c3.moveToFirst())
             {
                 do {
-                    Step step = new Step(c.getInt(2), c.getString(3));
+                    Step step = new Step(c3.getInt(2), c3.getString(3));
                     steps.add(step);
                 } while(c.moveToNext());
             }
 
-            Nutrition nutrition = new Nutrition(c.getDouble(7),c.getDouble(8),c.getDouble(9),c.getDouble(10),c.getDouble(11),c.getDouble(12),c.getDouble(13),c.getDouble(14));
-            recipe = new Recipe(c.getInt(0), c.getString(1),c.getString(2), c.getInt(3),timing, ingredients, steps, nutrition);
+            Nutrition nutrition = new Nutrition(c.getDouble(8),c.getDouble(9),c.getDouble(10),c.getDouble(11),c.getDouble(12),c.getDouble(13),c.getDouble(14),c.getDouble(15));
+            recipe = new Recipe(c.getInt(1), c.getString(2),c.getString(3), c.getInt(4),timing, ingredients, steps, nutrition);
 
         }
 

@@ -130,6 +130,7 @@ public class SingleRecipeDisplayActivity extends AppCompatActivity {
             {
                 item.setIcon(R.drawable.ic_favorite_off);
                 Toast.makeText(this, "Recettes supprimée des favoris", Toast.LENGTH_SHORT).show();
+                dbHelper.deleteRecipe(recipe.getId());
                 isFav = false;
             }
             else

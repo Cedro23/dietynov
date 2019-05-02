@@ -133,8 +133,8 @@ public class MyRecipesActivity extends AppCompatActivity implements NavigationVi
     //fetching recipe list from database
     private void fetchListFromDB(){
         DatabaseHelper dbHelper = new DatabaseHelper(this);
-
         listRecipes = dbHelper.fetchAllFromRecipe();
+        displayRecyclerView();
     }
 
     private void displayRecyclerView() {
