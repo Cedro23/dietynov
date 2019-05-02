@@ -37,6 +37,7 @@ import java.util.Collections;
 public class MyRecipesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private ArrayList<Recipe> listRecipes = new ArrayList<>();
+    private boolean isSorted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +99,20 @@ public class MyRecipesActivity extends AppCompatActivity implements NavigationVi
         int id = item.getItemId();
 
         if (id == R.id.action_sort) {
-            Toast.makeText(this, "Liste triée", Toast.LENGTH_SHORT).show();
+            if (!isSorted){
+                Toast.makeText(this, "Liste triée", Toast.LENGTH_SHORT).show();
+                ArrayList<Recipe> sortedList = new ArrayList<>(listRecipes);
+                Collections.sort(sortedList, new RecipeComparator(true, this));
+                item.setTitle(getResources().getString(R.string.action_sort_name));
+                displayRecyclerView(sortedList);
+                isSorted = true;
+            } else {
+                Toast.makeText(this, "Liste triée", Toast.LENGTH_SHORT).show();
+                item.setTitle(getResources().getString(R.string.action_sort_fav));
+                displayRecyclerView(listRecipes);
+                isSorted = false;
+            }
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -110,10 +124,9 @@ public class MyRecipesActivity extends AppCompatActivity implements NavigationVi
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id != R.id.nav_recipes)
-        {
-            Intent intent = new Intent();
 
+            Intent intent = new Intent();
+        if (id != R.id.nav_recipes) {
             if (id == R.id.nav_home) {
                 // Handle the home action
                 intent = new Intent(this, MainActivity.class);
@@ -122,7 +135,14 @@ public class MyRecipesActivity extends AppCompatActivity implements NavigationVi
                 intent = new Intent(this, MyAccountActivity.class);
             }
             startActivity(intent);
+        } else if (id == R.id.nav_recipes){
+            if (getIntent().getExtras().getString("fetchType").equals("webservice") || getIntent().getExtras() == null){
+                intent = new Intent(this, MyRecipesActivity.class);
+                intent.putExtra("fetchType", "database");
+                startActivity(intent);
+            }
         }
+
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -134,10 +154,10 @@ public class MyRecipesActivity extends AppCompatActivity implements NavigationVi
     private void fetchListFromDB(){
         DatabaseHelper dbHelper = new DatabaseHelper(this);
         listRecipes = dbHelper.fetchAllFromRecipe();
-        displayRecyclerView();
+        displayRecyclerView(listRecipes);
     }
 
-    private void displayRecyclerView() {
+    private void displayRecyclerView(ArrayList<Recipe> _list) {
         RecyclerView recyclerView;
         RecyclerView.Adapter mAdapter;
         RecyclerView.LayoutManager layoutManager;
@@ -154,7 +174,7 @@ public class MyRecipesActivity extends AppCompatActivity implements NavigationVi
         recyclerView.setLayoutManager(layoutManager);
 
         //Instanciation de l'adapter
-        mAdapter = new RVAdapterRecipes(this, listRecipes);
+        mAdapter = new RVAdapterRecipes(this, _list);
         recyclerView.setAdapter(mAdapter);
     }
 
@@ -197,7 +217,7 @@ public class MyRecipesActivity extends AppCompatActivity implements NavigationVi
 
                         listRecipes.add(new Recipe(i, currentRecipe.getString("title"), currentRecipe.getString("picture_url"), currentRecipe.getInt("portions"), new Timing(currentRecipeTime.getInt("total"),currentRecipeTime.getInt("prep"),currentRecipeTime.getInt("baking")), ingredients, steps, nutrition));
                     }
-                    displayRecyclerView();
+                    displayRecyclerView(listRecipes);
                 }
                 catch(JSONException e){
 

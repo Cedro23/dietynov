@@ -182,12 +182,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //delete recipe
-    public void deleteRecipe(int id_recette)
+    public void deleteRecipe(int id_recipe)
     {
         SQLiteDatabase db = this.getReadableDatabase();
-        db.delete(RECIPES_TABLE, "id_recipe = " + id_recette, null);
-        db.delete(INGREDIENTS_TABLE, "id_recipe = " + id_recette, null);
-        db.delete(STEPS_TABLE, "id_recipe = " + id_recette, null);
+        db.delete(RECIPES_TABLE, "id_recipe = " + id_recipe, null);
+        db.delete(INGREDIENTS_TABLE, "id_recipe = " + id_recipe, null);
+        db.delete(STEPS_TABLE, "id_recipe = " + id_recipe, null);
         db.close();
     }
 
@@ -236,51 +236,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return listRecipes;
     }
 
-    //Fetch one from recipe
-    public Recipe fetchOneFromRecipe(int id_recette)
-    {
-        Recipe recipe = null;
-        ArrayList<Ingredient> ingredients = new ArrayList<>();
-        ArrayList<Step> steps = new ArrayList<>();
-
-        SQLiteDatabase db = this.getReadableDatabase();
-        String selectQuery = "SELECT  * FROM " + RECIPES_TABLE + " WHERE id_recette = " + id_recette;
-        Cursor c = db.rawQuery(selectQuery,null,null);
-
-        String selectQueryIngredient = "SELECT  * FROM " + INGREDIENTS_TABLE + " WHERE id_recette = " + id_recette;
-        Cursor c2 = db.rawQuery(selectQueryIngredient,null,null);
-
-        String selectQueryStep = "SELECT  * FROM " + INGREDIENTS_TABLE + " WHERE id_recette = " + id_recette;
-        Cursor c3 = db.rawQuery(selectQueryStep,null,null);
-
-        if (c.moveToFirst()) {
-            Timing timing = new Timing(c.getInt(5), c.getInt(6),c.getInt(7));
-
-            if (c2.moveToFirst())
-            {
-                do {
-                    Ingredient ingredient = new Ingredient(c2.getDouble(3),c2.getString(4), c2.getString(2));
-                    ingredients.add(ingredient);
-                } while(c.moveToNext());
-            }
-
-            if (c3.moveToFirst())
-            {
-                do {
-                    Step step = new Step(c3.getInt(2), c3.getString(3));
-                    steps.add(step);
-                } while(c.moveToNext());
-            }
-
-            Nutrition nutrition = new Nutrition(c.getDouble(8),c.getDouble(9),c.getDouble(10),c.getDouble(11),c.getDouble(12),c.getDouble(13),c.getDouble(14),c.getDouble(15));
-            recipe = new Recipe(c.getInt(1), c.getString(2),c.getString(3), c.getInt(4),timing, ingredients, steps, nutrition);
-
-        }
-
-        return recipe;
-    }
-
-    //Vérifie combien de fois le prospect se trouve dans la BDD
+    //Vérifie combien de fois la recette se trouve dans la BD
     public boolean getRecipeIsFav(int _idRecipe)
     {
         String selectQuery = "SELECT  * FROM " + RECIPES_TABLE + " WHERE id_recipe = " + _idRecipe;
@@ -288,13 +244,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         Cursor cursor = db.rawQuery(selectQuery,null,null);
 
-        //Si la recette n'est pas présente dans la BDD, alors on renvoie "false"
+        //Si la recette n'est pas présente dans la BD, alors on renvoie "false"
         if (cursor.getCount() <= 0)
         {
             cursor.close();
             return false;
         }
-        //Si la recette est présente dans la BDD au moins une fois (max = 1), alors on revoie "true"
+        //Si la recette est présente dans la BD au moins une fois (max = 1), alors on revoie "true"
         else
         {
             cursor.close();

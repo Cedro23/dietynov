@@ -1,5 +1,7 @@
 package com.ynov.dietynov;
 
+import android.content.Context;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -87,5 +89,12 @@ public class Recipe implements Serializable {
 
     public void setNutrition(Nutrition nutrition) {
         this.nutrition = nutrition;
+    }
+
+    public boolean getIsFav(Context _context){
+        boolean isFav;
+        DatabaseHelper dbHelper = new DatabaseHelper(_context);
+
+        return isFav = dbHelper.getRecipeIsFav(this.getId());
     }
 }
