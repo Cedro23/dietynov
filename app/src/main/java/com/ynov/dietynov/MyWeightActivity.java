@@ -80,10 +80,10 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
 
         //Gestion des données
         entries = new ArrayList<>();
-        for ( MeasurementData mData : listMeasurementData) {
+        for (MeasurementData mData : listMeasurementData) {
             int dateInDays = secondsToDays(mData.getDate());
             int value = Math.round(mData.getValue());
-            entries.add( new Entry(dateInDays,value));
+            entries.add(new Entry(dateInDays, value));
         }
         updateChart(entries, chart);
 
@@ -158,8 +158,7 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
         return true;
     }
 
-    private void addNewWeightData()
-    {
+    private void addNewWeightData() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Insérer poids");
         final EditText input = new EditText(this);
@@ -190,16 +189,14 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
         alert.show();
     }
 
-    private int secondsToDays(int _seconds)
-    {
+    private int secondsToDays(int _seconds) {
         int days = 0;
         double dateInHours = _seconds / 3600;
-        days = (int) Math.ceil(dateInHours/24);
+        days = (int) Math.ceil(dateInHours / 24);
         return days;
     }
 
-    private void updateChart(ArrayList<Entry> _entries, LineChart _chart)
-    {
+    private void updateChart(ArrayList<Entry> _entries, LineChart _chart) {
         LineDataSet dataSet;
         LineData lineData;
         dataSet = new LineDataSet(_entries, "Poids en fonction de la date");
@@ -213,8 +210,7 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
         _chart.invalidate(); // refresh
     }
 
-    private void displayChart(LineChart _chart)
-    {
+    private void displayChart(LineChart _chart) {
         //Options du graphique
         _chart.setTouchEnabled(true);
         _chart.setDragEnabled(true);
@@ -255,32 +251,28 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
         drawLimits(_chart);
     }
 
-    private void drawLimits(LineChart _chart){
+    private void drawLimits(LineChart _chart) {
         SharedPreferences accountPreferences = getSharedPreferences("accountPrefs", MODE_PRIVATE);
         String userHeight = accountPreferences.getString("height", "");
-        if ( userHeight != "")
-        {
-            float userHeightFloat = Float.parseFloat(userHeight)/100;
+        if (userHeight != "") {
+            float userHeightFloat = Float.parseFloat(userHeight) / 100;
             YAxis leftAxis = _chart.getAxisLeft(); //Axe Y côté gauche
-            LimitLine imc185 = createLimitLine(18.5f, userHeightFloat, Color.rgb(0,255,0));
+            LimitLine imc185 = createLimitLine(18.5f, userHeightFloat, Color.rgb(0, 255, 0));
             LimitLine imc25 = createLimitLine(25f, userHeightFloat, Color.rgb(255, 255, 0));
             LimitLine imc30 = createLimitLine(30f, userHeightFloat, Color.rgb(255, 153, 51));
-            LimitLine imc35 = createLimitLine(35f, userHeightFloat,Color.rgb(255,0,0));
+            LimitLine imc35 = createLimitLine(35f, userHeightFloat, Color.rgb(255, 0, 0));
 
 
             leftAxis.addLimitLine(imc185);
             leftAxis.addLimitLine(imc25);
             leftAxis.addLimitLine(imc30);
             leftAxis.addLimitLine(imc35);
-        }
-        else
-        {
+        } else {
             //Dire à l'utilisateur d'aller saisir sa taille
         }
 
         String userWeight = accountPreferences.getString("weight", "");
-        if (userWeight != "")
-        {
+        if (userWeight != "") {
             float userWeightFloat = Float.parseFloat(userWeight);
             YAxis leftAxis = _chart.getAxisLeft(); //Axe Y côté gauche
             LimitLine startingWeightLimit = new LimitLine(userWeightFloat, "Poids de départ");
@@ -289,15 +281,13 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
             startingWeightLimit.setTextColor(Color.BLACK);
             startingWeightLimit.setTextSize(12f);
             leftAxis.addLimitLine(startingWeightLimit);
-        }
-        else
-        {
+        } else {
             //Dire à l'utilisateur d'aller saisir son poids de départ
         }
     }
 
-    private LimitLine createLimitLine(float _imcValue, float _height, int _color){
-        LimitLine mLimitLine = new LimitLine(_imcValue * (float) Math.pow(_height,2),"IMC " + Float.toString(_imcValue));
+    private LimitLine createLimitLine(float _imcValue, float _height, int _color) {
+        LimitLine mLimitLine = new LimitLine(_imcValue * (float) Math.pow(_height, 2), "IMC " + Float.toString(_imcValue));
 
         mLimitLine.setLineColor(_color);
         mLimitLine.setLineWidth(2f);
@@ -326,8 +316,7 @@ public class MyWeightActivity extends AppCompatActivity implements NavigationVie
         recyclerView.setAdapter(mAdapter);
     }
 
-    private void updateRecyclerView()
-    {
+    private void updateRecyclerView() {
         mAdapter.notifyDataSetChanged();
     }
 }

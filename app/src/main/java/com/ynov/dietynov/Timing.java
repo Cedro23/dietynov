@@ -7,8 +7,7 @@ public class Timing implements Serializable {
     private int prep;
     private int baking;
 
-    public Timing(int _total, int _prep, int _baking)
-    {
+    public Timing(int _total, int _prep, int _baking) {
         this.total = _total;
         this.prep = _prep;
         this.baking = _baking;

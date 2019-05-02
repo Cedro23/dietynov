@@ -6,8 +6,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 /**
  * Created by philipp on 02/06/16.
  */
-public class DayAxisValueFormatter extends ValueFormatter
-{
+public class DayAxisValueFormatter extends ValueFormatter {
 
     private int startingYear = 2019;
     private final String[] mMonths = new String[]{
@@ -107,13 +106,13 @@ public class DayAxisValueFormatter extends ValueFormatter
         if (days <= 365)
             return startingYear; //2019
         else if (days <= 731)
-            return startingYear+1; //2020
+            return startingYear + 1; //2020
         else if (days <= 1096)
-            return startingYear+2; //2021
+            return startingYear + 2; //2021
         else if (days <= 1461)
-            return startingYear+3; //2022
+            return startingYear + 3; //2022
         else
-            return startingYear+4; //2023
+            return startingYear + 4; //2023
 
     }
 }

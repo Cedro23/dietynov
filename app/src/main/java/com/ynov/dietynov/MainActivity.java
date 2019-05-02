@@ -76,11 +76,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
 
-        if (id != R.id.nav_home)
-        {
+        if (id != R.id.nav_home) {
             Intent intent = new Intent();
 
-            if(id == R.id.nav_account) {
+            if (id == R.id.nav_account) {
                 // Handle the account action
                 intent = new Intent(this, MyAccountActivity.class);
             } else if (id == R.id.nav_recipes) {
@@ -97,20 +96,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    public void displayMyWeight(View _v)
-    {
+    public void displayMyWeight(View _v) {
         Intent intent = new Intent(this, MyWeightActivity.class);
         startActivity(intent);
     }
 
-    public void displayMyMeasurements(View _v)
-    {
+    public void displayMyMeasurements(View _v) {
         Intent intent = new Intent(this, MyMeasurementsActivity.class);
         startActivity(intent);
     }
 
-    public void displayMyRecipes(View _v)
-    {
+    public void displayMyRecipes(View _v) {
         Intent intent = new Intent(this, MyRecipesActivity.class);
         intent.putExtra("fetchType", "webservice");
         startActivity(intent);

@@ -7,8 +7,7 @@ public class Ingredient implements Serializable {
     private String unit;
     private String name;
 
-    public Ingredient(double _quantity, String _unit, String _name)
-    {
+    public Ingredient(double _quantity, String _unit, String _name) {
         this.quantity = _quantity;
         this.unit = _unit;
         this.name = _name;

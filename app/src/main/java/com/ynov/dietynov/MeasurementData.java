@@ -4,7 +4,7 @@ public class MeasurementData {
     private int date;
     private float value;
 
-    public MeasurementData(int _date, float _value){
+    public MeasurementData(int _date, float _value) {
         this.date = _date;
         this.value = _value;
     }

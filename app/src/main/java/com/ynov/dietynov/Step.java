@@ -6,8 +6,7 @@ public class Step implements Serializable {
     private int order;
     private String textStep;
 
-    public Step(int _order, String _textStep)
-    {
+    public Step(int _order, String _textStep) {
         this.order = _order;
         this.textStep = _textStep;
     }

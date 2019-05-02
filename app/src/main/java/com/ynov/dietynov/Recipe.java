@@ -15,8 +15,7 @@ public class Recipe implements Serializable {
     private ArrayList<Step> steps;
     private Nutrition nutrition;
 
-    public Recipe(int _id, String _name, String _imageURL, int _portions, Timing _time, ArrayList<Ingredient> _ingredients, ArrayList<Step> _steps, Nutrition _nutrition)
-    {
+    public Recipe(int _id, String _name, String _imageURL, int _portions, Timing _time, ArrayList<Ingredient> _ingredients, ArrayList<Step> _steps, Nutrition _nutrition) {
         this.id = _id;
         this.name = _name;
         this.imageURL = _imageURL;
@@ -91,7 +90,7 @@ public class Recipe implements Serializable {
         this.nutrition = nutrition;
     }
 
-    public boolean getIsFav(Context _context){
+    public boolean getIsFav(Context _context) {
         boolean isFav;
         DatabaseHelper dbHelper = new DatabaseHelper(_context);
 

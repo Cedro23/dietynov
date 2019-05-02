@@ -39,7 +39,7 @@ import java.util.ArrayList;
 
 public class MyMeasurementsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemSelectedListener {
 
-    private String[] measurements = { "Taille", "Hanche", "Cuisse", "Bras"};
+    private String[] measurements = {"Taille", "Hanche", "Cuisse", "Bras"};
     private String selectedMeasurement;
     private ArrayList<MeasurementData> listMeasurementData;
     private ArrayList<Entry> entries;
@@ -80,7 +80,7 @@ public class MyMeasurementsActivity extends AppCompatActivity implements Navigat
         spin.setOnItemSelectedListener(this);
 
         //Création de l'instance du spinner avec la liste "measurements"
-        ArrayAdapter aa = new ArrayAdapter(this,android.R.layout.simple_spinner_item,measurements);
+        ArrayAdapter aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, measurements);
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //Setting the ArrayAdapter data on the Spinner
         spin.setAdapter(aa);
@@ -162,19 +162,19 @@ public class MyMeasurementsActivity extends AppCompatActivity implements Navigat
         mAdapter = new RVAdapterMeasurements(this, listMeasurementData, "cm");
         displayRecyclerView();
     }
+
     @Override
     public void onNothingSelected(AdapterView<?> arg0) {
         // TODO Auto-generated method stub
     }
 
-    private void fetchingDataFromDB(){
+    private void fetchingDataFromDB() {
         //Récupération des données dans la BD
         DatabaseHelper dbHelper = new DatabaseHelper(this);
         listMeasurementData = dbHelper.fetchAllOfOneTypeFromMeasurements(selectedMeasurement);
     }
 
-    private void addNewMeasurementData()
-    {
+    private void addNewMeasurementData() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Insérer mensuration");
         final EditText input = new EditText(this);
@@ -204,19 +204,18 @@ public class MyMeasurementsActivity extends AppCompatActivity implements Navigat
         alert.show();
     }
 
-    private void updateEntries(){
+    private void updateEntries() {
         //Gestion des données
         entries = new ArrayList<>();
-        for ( MeasurementData mData : listMeasurementData) {
+        for (MeasurementData mData : listMeasurementData) {
             int dateInDays = secondsToDays(mData.getDate());
             int value = Math.round(mData.getValue());
-            entries.add( new Entry(dateInDays,value));
+            entries.add(new Entry(dateInDays, value));
         }
         updateChart(entries);
     }
 
-    private void displayChart()
-    {
+    private void displayChart() {
         //Options du graphique
         chart.setTouchEnabled(true);
         chart.setDragEnabled(true);
@@ -254,16 +253,14 @@ public class MyMeasurementsActivity extends AppCompatActivity implements Navigat
         desc.setEnabled(false);
     }
 
-    private int secondsToDays(int _seconds)
-    {
+    private int secondsToDays(int _seconds) {
         int days = 0;
         double dateInHours = _seconds / 3600;
-        days = (int) Math.ceil(dateInHours/24);
+        days = (int) Math.ceil(dateInHours / 24);
         return days;
     }
 
-    private void updateChart(ArrayList<Entry> _entries)
-    {
+    private void updateChart(ArrayList<Entry> _entries) {
         LineDataSet dataSet;
         LineData lineData;
         dataSet = new LineDataSet(_entries, "Poids en fonction de la date");
@@ -296,8 +293,7 @@ public class MyMeasurementsActivity extends AppCompatActivity implements Navigat
         recyclerView.setAdapter(mAdapter);
     }
 
-    private void updateRecyclerView()
-    {
+    private void updateRecyclerView() {
         mAdapter.notifyDataSetChanged();
     }
 }

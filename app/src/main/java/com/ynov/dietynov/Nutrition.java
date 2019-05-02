@@ -12,8 +12,7 @@ public class Nutrition implements Serializable {
     private double fiber;
     private double sodium;
 
-    public Nutrition(double _kcal, double _protein, double _fat, double _carbohydrate, double _sugar, double _sat_fat,double _fiber, double _sodium)
-    {
+    public Nutrition(double _kcal, double _protein, double _fat, double _carbohydrate, double _sugar, double _sat_fat, double _fiber, double _sodium) {
         this.kcal = _kcal;
         this.protein = _protein;
         this.fat = _fat;

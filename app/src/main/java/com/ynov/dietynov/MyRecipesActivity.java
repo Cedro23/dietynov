@@ -58,17 +58,16 @@ public class MyRecipesActivity extends AppCompatActivity implements NavigationVi
         Bundle extras = getIntent().getExtras();
 
         if (extras != null) {
-            if (extras.getString("fetchType").equals("database")){
+            if (extras.getString("fetchType").equals("database")) {
                 //code when needing list from DB
                 fetchListFromDB();
             }
 
-            if (extras.getString("fetchType").equals("webservice")){
+            if (extras.getString("fetchType").equals("webservice")) {
                 //code when needing list from WebService
                 instantiateRequestQueue();
             }
-        }
-        else {
+        } else {
             instantiateRequestQueue();
         }
 
@@ -99,7 +98,7 @@ public class MyRecipesActivity extends AppCompatActivity implements NavigationVi
         int id = item.getItemId();
 
         if (id == R.id.action_sort) {
-            if (!isSorted){
+            if (!isSorted) {
                 Toast.makeText(this, "Liste triée", Toast.LENGTH_SHORT).show();
                 ArrayList<Recipe> sortedList = new ArrayList<>(listRecipes);
                 Collections.sort(sortedList, new RecipeComparator(true, this));
@@ -123,9 +122,7 @@ public class MyRecipesActivity extends AppCompatActivity implements NavigationVi
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-
-            Intent intent = new Intent();
+        Intent intent = new Intent();
         if (id != R.id.nav_recipes) {
             if (id == R.id.nav_home) {
                 // Handle the home action
@@ -135,14 +132,13 @@ public class MyRecipesActivity extends AppCompatActivity implements NavigationVi
                 intent = new Intent(this, MyAccountActivity.class);
             }
             startActivity(intent);
-        } else if (id == R.id.nav_recipes){
-            if (getIntent().getExtras().getString("fetchType").equals("webservice") || getIntent().getExtras() == null){
+        } else if (id == R.id.nav_recipes) {
+            if (getIntent().getExtras().getString("fetchType").equals("webservice") || getIntent().getExtras() == null) {
                 intent = new Intent(this, MyRecipesActivity.class);
                 intent.putExtra("fetchType", "database");
                 startActivity(intent);
             }
         }
-
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -151,7 +147,7 @@ public class MyRecipesActivity extends AppCompatActivity implements NavigationVi
     }
 
     //fetching recipe list from database
-    private void fetchListFromDB(){
+    private void fetchListFromDB() {
         DatabaseHelper dbHelper = new DatabaseHelper(this);
         listRecipes = dbHelper.fetchAllFromRecipe();
         displayRecyclerView(listRecipes);
@@ -187,10 +183,9 @@ public class MyRecipesActivity extends AppCompatActivity implements NavigationVi
             public void onResponse(JSONObject responseObject) {
                 listRecipes = new ArrayList<>();
                 JSONObject jsonObject = responseObject;
-                try{
+                try {
                     JSONArray jsonArray = jsonObject.getJSONArray("result");
-                    for (int i = 0; i < jsonArray.length(); i++)
-                    {
+                    for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject currentRecipe = jsonArray.getJSONObject(i);
                         JSONObject currentRecipeTime = currentRecipe.getJSONObject("time");
                         JSONArray currentRecipeIngredients = currentRecipe.getJSONArray("ingredients");
@@ -199,27 +194,24 @@ public class MyRecipesActivity extends AppCompatActivity implements NavigationVi
 
                         ArrayList<Ingredient> ingredients = new ArrayList<>();
 
-                        for (int j=0; j<currentRecipeIngredients.length(); j++)
-                        {
+                        for (int j = 0; j < currentRecipeIngredients.length(); j++) {
                             JSONObject ingredient = currentRecipeIngredients.getJSONObject(j);
-                            ingredients.add(new Ingredient(ingredient.getDouble("quantity"),ingredient.getString("unit"),ingredient.getString("name")));
+                            ingredients.add(new Ingredient(ingredient.getDouble("quantity"), ingredient.getString("unit"), ingredient.getString("name")));
                         }
 
                         ArrayList<Step> steps = new ArrayList<>();
 
-                        for (int j=0; j<currentRecipeSteps.length(); j++)
-                        {
+                        for (int j = 0; j < currentRecipeSteps.length(); j++) {
                             JSONObject step = currentRecipeSteps.getJSONObject(j);
-                            steps.add(new Step(step.getInt("order"),step.getString("step")));
+                            steps.add(new Step(step.getInt("order"), step.getString("step")));
                         }
 
                         Nutrition nutrition = new Nutrition(currentRecipeNutrition.getDouble("kcal"), currentRecipeNutrition.getDouble("protein"), currentRecipeNutrition.getDouble("fat"), currentRecipeNutrition.getDouble("carbohydrate"), currentRecipeNutrition.getDouble("sugar"), currentRecipeNutrition.getDouble("sat_fat"), currentRecipeNutrition.getDouble("fiber"), currentRecipeNutrition.getDouble("sodium"));
 
-                        listRecipes.add(new Recipe(i, currentRecipe.getString("title"), currentRecipe.getString("picture_url"), currentRecipe.getInt("portions"), new Timing(currentRecipeTime.getInt("total"),currentRecipeTime.getInt("prep"),currentRecipeTime.getInt("baking")), ingredients, steps, nutrition));
+                        listRecipes.add(new Recipe(i, currentRecipe.getString("title"), currentRecipe.getString("picture_url"), currentRecipe.getInt("portions"), new Timing(currentRecipeTime.getInt("total"), currentRecipeTime.getInt("prep"), currentRecipeTime.getInt("baking")), ingredients, steps, nutrition));
                     }
                     displayRecyclerView(listRecipes);
-                }
-                catch(JSONException e){
+                } catch (JSONException e) {
 
                 }
             }

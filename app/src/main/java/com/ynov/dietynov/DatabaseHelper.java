@@ -56,8 +56,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String _STEP = "step";
 
 
-    public DatabaseHelper(Context _context)
-    {
+    public DatabaseHelper(Context _context) {
         super(_context, DATABASE_NAME, null, DATABASE_VERSION);
         mContext = _context;
     }
@@ -86,8 +85,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //insert data in measurements table
-    public void insertDataInMeasurements(String _type, long _date, float _value)
-    {
+    public void insertDataInMeasurements(String _type, long _date, float _value) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(_TYPE, _type); //Add type
@@ -99,14 +97,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //fetch all of one type from measurements
-    public ArrayList<MeasurementData> fetchAllOfOneTypeFromMeasurements(String _type)
-    {
+    public ArrayList<MeasurementData> fetchAllOfOneTypeFromMeasurements(String _type) {
         ArrayList<MeasurementData> listMeasurementData = new ArrayList<>();
 
         String selectQuery = "SELECT  date, value FROM " + MEASUREMENTS_TABLE + " WHERE type = ?";
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor c = db.rawQuery(selectQuery,new String[] {_type},null);
+        Cursor c = db.rawQuery(selectQuery, new String[]{_type}, null);
 
         if (c.moveToFirst()) {
             do {
@@ -120,17 +117,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //delete all of one type from measurements
-    public void deleteDataFromOneInMeasurements(String _type)
-    {
+    public void deleteDataFromOneInMeasurements(String _type) {
         SQLiteDatabase db = this.getReadableDatabase();
-        db.delete(MEASUREMENTS_TABLE, "type = ?", new String[] {_type});
+        db.delete(MEASUREMENTS_TABLE, "type = ?", new String[]{_type});
         db.close();
     }
 
 
     //insert data in measurements table
-    public void insertRecipe(Recipe recipe)
-    {
+    public void insertRecipe(Recipe recipe) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         //Partie recettes
@@ -154,8 +149,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.insert(RECIPES_TABLE, null, cvRecipe);
 
         //Partie ingrédients
-        for (int i=0; i<recipe.getIngredients().size(); i++)
-        {
+        for (int i = 0; i < recipe.getIngredients().size(); i++) {
             Ingredient ingredient = recipe.getIngredients().get(i);
             ContentValues cvIngredients = new ContentValues();
             cvIngredients.put(_ID_RECETTE, recipe.getId());
@@ -167,8 +161,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         //Partie étapes
-        for (int i=0; i<recipe.getSteps().size(); i++)
-        {
+        for (int i = 0; i < recipe.getSteps().size(); i++) {
             Step steps = recipe.getSteps().get(i);
             ContentValues cvSteps = new ContentValues();
             cvSteps.put(_ID_RECETTE, recipe.getId());
@@ -182,8 +175,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //delete recipe
-    public void deleteRecipe(int id_recipe)
-    {
+    public void deleteRecipe(int id_recipe) {
         SQLiteDatabase db = this.getReadableDatabase();
         db.delete(RECIPES_TABLE, "id_recipe = " + id_recipe, null);
         db.delete(INGREDIENTS_TABLE, "id_recipe = " + id_recipe, null);
@@ -193,43 +185,40 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     //Fetch all recipes from Recipe table
-    public ArrayList<Recipe> fetchAllFromRecipe()
-    {
+    public ArrayList<Recipe> fetchAllFromRecipe() {
         ArrayList<Recipe> listRecipes = new ArrayList<>();
         ArrayList<Ingredient> ingredients = new ArrayList<>();
         ArrayList<Step> steps = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
         String selectQuery = "SELECT  * FROM " + RECIPES_TABLE;
-        Cursor c = db.rawQuery(selectQuery,null,null);
+        Cursor c = db.rawQuery(selectQuery, null, null);
 
         String selectQueryIngredient = "SELECT  * FROM " + INGREDIENTS_TABLE;
-        Cursor c2 = db.rawQuery(selectQueryIngredient,null,null);
+        Cursor c2 = db.rawQuery(selectQueryIngredient, null, null);
 
         String selectQueryStep = "SELECT  * FROM " + STEPS_TABLE;
-        Cursor c3 = db.rawQuery(selectQueryStep,null,null);
+        Cursor c3 = db.rawQuery(selectQueryStep, null, null);
 
         if (c.moveToFirst()) {
-            Timing timing = new Timing(c.getInt(5), c.getInt(6),c.getInt(7));
+            Timing timing = new Timing(c.getInt(5), c.getInt(6), c.getInt(7));
 
-            if (c2.moveToFirst())
-            {
+            if (c2.moveToFirst()) {
                 do {
-                    Ingredient ingredient = new Ingredient(c2.getDouble(3),c2.getString(4), c2.getString(2));
+                    Ingredient ingredient = new Ingredient(c2.getDouble(3), c2.getString(4), c2.getString(2));
                     ingredients.add(ingredient);
-                } while(c2.moveToNext());
+                } while (c2.moveToNext());
             }
 
-            if (c3.moveToFirst())
-            {
+            if (c3.moveToFirst()) {
                 do {
                     Step step = new Step(c3.getInt(2), c3.getString(3));
                     steps.add(step);
-                } while(c3.moveToNext());
+                } while (c3.moveToNext());
             }
 
-            Nutrition nutrition = new Nutrition(c.getDouble(8),c.getDouble(9),c.getDouble(10),c.getDouble(11),c.getDouble(12),c.getDouble(13),c.getDouble(14),c.getDouble(15));
-            Recipe recipe = new Recipe(c.getInt(1), c.getString(2),c.getString(3), c.getInt(4),timing, ingredients, steps, nutrition);
+            Nutrition nutrition = new Nutrition(c.getDouble(8), c.getDouble(9), c.getDouble(10), c.getDouble(11), c.getDouble(12), c.getDouble(13), c.getDouble(14), c.getDouble(15));
+            Recipe recipe = new Recipe(c.getInt(1), c.getString(2), c.getString(3), c.getInt(4), timing, ingredients, steps, nutrition);
             listRecipes.add(recipe);
         }
 
@@ -237,22 +226,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //Vérifie combien de fois la recette se trouve dans la BD
-    public boolean getRecipeIsFav(int _idRecipe)
-    {
+    public boolean getRecipeIsFav(int _idRecipe) {
         String selectQuery = "SELECT  * FROM " + RECIPES_TABLE + " WHERE id_recipe = " + _idRecipe;
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.rawQuery(selectQuery,null,null);
+        Cursor cursor = db.rawQuery(selectQuery, null, null);
 
         //Si la recette n'est pas présente dans la BD, alors on renvoie "false"
-        if (cursor.getCount() <= 0)
-        {
+        if (cursor.getCount() <= 0) {
             cursor.close();
             return false;
         }
         //Si la recette est présente dans la BD au moins une fois (max = 1), alors on revoie "true"
-        else
-        {
+        else {
             cursor.close();
             return true;
         }

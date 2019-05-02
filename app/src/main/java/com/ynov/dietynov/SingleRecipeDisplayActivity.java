@@ -30,22 +30,22 @@ public class SingleRecipeDisplayActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         recipe = (Recipe) extras.getSerializable("Recipe");
 
-        isFav =checkIsFav();
+        isFav = checkIsFav();
 
         //référence aux views
         ImageView image = findViewById(R.id.IV_recipeImage);
         TextView name = findViewById(R.id.TV_nameRecipe);
         TextView timePrep = findViewById(R.id.TV_timePrep);
         TextView timeBake = findViewById(R.id.TV_timeBake);
-        TextView timeTot= findViewById(R.id.TV_timeTotal);
-        TextView kcal= findViewById(R.id.TV_kcal_value);
-        TextView protein= findViewById(R.id.TV_protein_value);
-        TextView fat= findViewById(R.id.TV_fat_value);
-        TextView carbohydrate= findViewById(R.id.TV_carbohydrate_value);
-        TextView sat_fat= findViewById(R.id.TV_sat_fat_value);
-        TextView sugar= findViewById(R.id.TV_sugar_value);
-        TextView fiber= findViewById(R.id.TV_fiber_value);
-        TextView sodium= findViewById(R.id.TV_sodium_value);
+        TextView timeTot = findViewById(R.id.TV_timeTotal);
+        TextView kcal = findViewById(R.id.TV_kcal_value);
+        TextView protein = findViewById(R.id.TV_protein_value);
+        TextView fat = findViewById(R.id.TV_fat_value);
+        TextView carbohydrate = findViewById(R.id.TV_carbohydrate_value);
+        TextView sat_fat = findViewById(R.id.TV_sat_fat_value);
+        TextView sugar = findViewById(R.id.TV_sugar_value);
+        TextView fiber = findViewById(R.id.TV_fiber_value);
+        TextView sodium = findViewById(R.id.TV_sodium_value);
 
         //référence aux layouts
         LinearLayout ingredientLayout = findViewById(R.id.LO_ingredients);
@@ -53,18 +53,17 @@ public class SingleRecipeDisplayActivity extends AppCompatActivity {
 
         //paramètres de view
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0,0,0,20);
+        params.setMargins(0, 0, 0, 20);
 
         //affectation des valeurs
         Picasso.get().load(recipe.getImageURL()).into(image);
-        name.setText(recipe.getName() + " (" + recipe.getPortions() +" portion.s)");
+        name.setText(recipe.getName() + " (" + recipe.getPortions() + " portion.s)");
         timePrep.setText("Préparation : " + recipe.getTime().getPrep() + " min");
         timeBake.setText("Cuisson : " + recipe.getTime().getBaking() + " min");
         timeTot.setText("Total : " + recipe.getTime().getTotal() + " min");
 
 
-        for (int i=0; i<recipe.getIngredients().size(); i++)
-        {
+        for (int i = 0; i < recipe.getIngredients().size(); i++) {
             Ingredient ingredient = recipe.getIngredients().get(i);
             TextView tvIngredient = new TextView(this);
             if (ingredient.getUnit().equals("sans unité"))
@@ -75,8 +74,7 @@ public class SingleRecipeDisplayActivity extends AppCompatActivity {
             ingredientLayout.addView(tvIngredient);
         }
 
-        for (int i=0; i<recipe.getSteps().size(); i++)
-        {
+        for (int i = 0; i < recipe.getSteps().size(); i++) {
             Step step = recipe.getSteps().get(i);
             TextView tvStep = new TextView(this);
             tvStep.setText(step.getOrder() + " : " + step.getTextStep());
@@ -107,8 +105,7 @@ public class SingleRecipeDisplayActivity extends AppCompatActivity {
 
         if (isFav) {
             menuFavorite.setIcon(R.drawable.ic_favorite);
-        }
-        else {
+        } else {
             menuFavorite.setIcon(R.drawable.ic_favorite_off);
         }
 
@@ -126,15 +123,12 @@ public class SingleRecipeDisplayActivity extends AppCompatActivity {
         if (id == R.id.action_favorite) {
             DatabaseHelper dbHelper = new DatabaseHelper(this);
 
-            if (isFav)
-            {
+            if (isFav) {
                 item.setIcon(R.drawable.ic_favorite_off);
                 Toast.makeText(this, "Recettes supprimée des favoris", Toast.LENGTH_SHORT).show();
                 dbHelper.deleteRecipe(recipe.getId());
                 isFav = false;
-            }
-            else
-            {
+            } else {
                 item.setIcon(R.drawable.ic_favorite);
                 Toast.makeText(this, "Recettes ajoutée aux favoris", Toast.LENGTH_SHORT).show();
                 dbHelper.insertRecipe(recipe);
@@ -146,8 +140,7 @@ public class SingleRecipeDisplayActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private boolean checkIsFav()
-    {
+    private boolean checkIsFav() {
         DatabaseHelper dbHelper = new DatabaseHelper(this);
 
         boolean isFav = dbHelper.getRecipeIsFav(recipe.getId());

@@ -84,25 +84,25 @@ public class MyAccountActivity extends AppCompatActivity
                     //Fix for pressing delete next to a forward slash
                     if (clean.equals(cleanC)) sel--;
 
-                    if (clean.length() < 8){
+                    if (clean.length() < 8) {
                         clean = clean + ddmmyyyy.substring(clean.length());
-                    }else{
+                    } else {
                         //This part makes sure that when we finish entering numbers
                         //the date is correct, fixing it otherwise
-                        int day  = Integer.parseInt(clean.substring(0,2));
-                        int mon  = Integer.parseInt(clean.substring(2,4));
-                        int year = Integer.parseInt(clean.substring(4,8));
+                        int day = Integer.parseInt(clean.substring(0, 2));
+                        int mon = Integer.parseInt(clean.substring(2, 4));
+                        int year = Integer.parseInt(clean.substring(4, 8));
 
                         mon = mon < 1 ? 1 : mon > 12 ? 12 : mon;
-                        cal.set(Calendar.MONTH, mon-1);
-                        year = (year<1900)?1900:(year>2100)?2100:year;
+                        cal.set(Calendar.MONTH, mon - 1);
+                        year = (year < 1900) ? 1900 : (year > 2100) ? 2100 : year;
                         cal.set(Calendar.YEAR, year);
                         // ^ first set year for the line below to work correctly
                         //with leap years - otherwise, date e.g. 29/02/2012
                         //would be automatically corrected to 28/02/2012
 
-                        day = (day > cal.getActualMaximum(Calendar.DATE))? cal.getActualMaximum(Calendar.DATE):day;
-                        clean = String.format("%02d%02d%02d",day, mon, year);
+                        day = (day > cal.getActualMaximum(Calendar.DATE)) ? cal.getActualMaximum(Calendar.DATE) : day;
+                        clean = String.format("%02d%02d%02d", day, mon, year);
                     }
 
                     clean = String.format("%s/%s/%s", clean.substring(0, 2),
@@ -117,10 +117,12 @@ public class MyAccountActivity extends AppCompatActivity
             }
 
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         };
 
         //Références aux view de mon layout
@@ -140,7 +142,7 @@ public class MyAccountActivity extends AppCompatActivity
         et_Height.setText(accountPreferences.getString("height", ""));
         et_Weight.setText(accountPreferences.getString("weight", ""));
         if (accountPreferences.getInt("sexe", 2) != 2) {
-            ((RadioButton)rg_Sexe.getChildAt(accountPreferences.getInt("sexe", 2))).setChecked(true);
+            ((RadioButton) rg_Sexe.getChildAt(accountPreferences.getInt("sexe", 2))).setChecked(true);
         }
 
         //Gestion des listener pour les edit text
@@ -151,10 +153,9 @@ public class MyAccountActivity extends AppCompatActivity
                     String date = et_Date.getText().toString();
                     Pattern p = Pattern.compile("[a-zA-Z]");
                     Matcher m = p.matcher(date);
-                    if (m.find()){
+                    if (m.find()) {
                         et_Date.setText("");
-                    }
-                    else{
+                    } else {
                         accountPrefsEditor.putString("date", date);
                         accountPrefsEditor.commit();
                     }
@@ -174,7 +175,7 @@ public class MyAccountActivity extends AppCompatActivity
         et_Weight.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                switch (actionId){
+                switch (actionId) {
                     case EditorInfo.IME_ACTION_DONE:
                         String weight = et_Weight.getText().toString();
                         accountPrefsEditor.putString("weight", weight);
@@ -182,24 +183,21 @@ public class MyAccountActivity extends AppCompatActivity
 
                         //Permet de baisser/enlever le clavier après avoir appuyer sur ok
                         InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        inputManager.hideSoftInputFromWindow( et_Weight.getWindowToken(), 0);
+                        inputManager.hideSoftInputFromWindow(et_Weight.getWindowToken(), 0);
                         return true;
                 }
                 return false;
             }
         });
 
-        checkedChangeListener = new RadioGroup.OnCheckedChangeListener()
-        {
-            public void onCheckedChanged(RadioGroup group, int checkedId)
-            {
+        checkedChangeListener = new RadioGroup.OnCheckedChangeListener() {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
                 // This will get the radiobutton that has changed in its check state
                 RadioButton checkedRadioButton = group.findViewById(checkedId);
                 // This puts the value (true/false) into the variable
                 boolean isChecked = checkedRadioButton.isChecked();
                 // If the radiobutton that has changed in check state is now checked...
-                if (isChecked)
-                {
+                if (isChecked) {
                     accountPrefsEditor.putInt("sexe", group.indexOfChild(checkedRadioButton));
                     accountPrefsEditor.commit();
                 }
@@ -233,7 +231,7 @@ public class MyAccountActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-       //noinspection SimplifiableIfStatement
+        //noinspection SimplifiableIfStatement
         if (id == R.id.action_reset) {
             resetCredentials();
             return true;
@@ -270,8 +268,7 @@ public class MyAccountActivity extends AppCompatActivity
 
 
     // Est lancé lorsque l'utilisateur appuie sur le bouton réinitialiser
-    private void resetCredentials()
-    {
+    private void resetCredentials() {
         et_Date.setText("");
         et_Height.setText("");
         et_Weight.setText("");
@@ -280,6 +277,6 @@ public class MyAccountActivity extends AppCompatActivity
         rg_Sexe.setOnCheckedChangeListener(checkedChangeListener);
         accountPrefsEditor.clear();
         accountPrefsEditor.commit();
-        Toast.makeText(getApplicationContext(),"Données réinitialisées",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Données réinitialisées", Toast.LENGTH_SHORT).show();
     }
 }
